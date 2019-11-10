@@ -1,0 +1,19 @@
+# docker-compose for docker.io/peleion/eps
+
+version: '2'
+services:
+  eps:
+    image: docker.io/peleion/eps
+    container_name: eps
+    ports:
+      - 50002:50002
+    volumes:
+      - eps:/usr/local/etc/electrum-personal-server
+    restart: unless-stopped
+    networks:
+      - <yourcryptonetwork>
+volumes:
+  eps:
+networks:
+  <yourcryptonetwork>:
+    external: true
