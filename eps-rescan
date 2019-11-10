@@ -1,0 +1,8 @@
+#!/bin/sh
+docker run -it \
+    --name eps \
+    --volume <yourvolumename>:/usr/local/etc/electrum-personal-server \
+    --network=<yourcryptonetwork> \
+    --rm \
+    docker.io/peleion/eps \
+    electrum-personal-server-rescan /usr/local/etc/electrum-personal-server/config.cfg
