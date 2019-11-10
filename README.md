@@ -11,8 +11,8 @@ You should follow these steps to initialize the container:
 1. Run the container to create the docker volume
 2. Stop the container
 3. Edit config.cfg adding your wallet private keys and the location/credentials of your bitcoind container. Any local (non default or public) SSL certs should go in the volume as well since it is the only data that persists between container restarts.
-4. Start the container again. It will load the wallet addresses into the bitcoind wallet and can take a long time. It will exit when done.
-5. Start the container once again. It may take a few minutes for EPS to accept connections - you can monitor the Docker logs for the container.
+4. Start the container again. It will load the wallet addresses into the bitcoind wallet and can take a long time - you can monitor your bitcoind logs for progress.
+5. You may have to restart the container once again after address importation is finished depending on how you initially started the container. It may take a few minutes for EPS to accept connections - you can monitor the Docker EPS logs for the container.
 
 A sample docker-compose.yml is included - you should adapt it to your needs.
 
