@@ -1,17 +1,28 @@
-# eps-docker
-
-A Docker container for Electrum personal server based on Debian Buster:
+# eps-docker 
+A Docker container for Chris Belcher's excellent Electrum Personal Server based on Debian Buster:
 
 https://github.com/chris-belcher/electrum-personal-server
 
-This container uses a docker volume for /usr/local/etc/electrum-personal-server which contains the config.cfg along with the sample. It is set up to run with a bitcoind running in a separate container. The default docker0 network isolates containers from each other - you must create a new docker network so these containers will be able to communicate with each other.
+This container uses a persistent docker volume which contains the configuration file and sample - this is the /srv directory within the container. 
 
-You should follow these steps to initialize the container:
+STEPS TO RUN EPS
 
-1. Run the container to create the docker volume
-2. Stop the container and edit config.cfg adding your wallet xpub keys and the location/credentials of your bitcoind container. Any non default (LetsEncrypt or other public) SSL certs should go in the volume as well since it is the only data that persists between container restarts.
-3. Start the container again. It will load the wallet addresses into the bitcoind wallet and can take a long time - you can monitor your bitcoind logs for progress.
-4. If your wallet has any existing transactions you will have to again shut down the container and run the eps-rescan script to pick up these transactions - You MUST modify it for your specific setup first. This takes approximately one hour to rescan each 2,000 address Electrum wallet from genesis and will exit when done.
-5. You may have to restart the container once again after address importation is finished depending on how you initially started the container. It may take a few minutes for EPS to accept connections - you can monitor the Docker EPS logs for the container.
+1. BITCOIND: Ensure your bitcoind (in a separate container) is running, fully synced, wallet enabled and you have set an RPC user and password in your bitcoin.conf. The default docker0 network isolates containers from each other - you must create a new docker network so these containers will be able to communicate. 
+
+2. CONFIGURATION: The default configuration is to serve a single wallet (xpub) by passing a few environment variables without manual configuration. No user changes are needed if you want to use this basic configuration and it also works with BTCPay. The only variables needed are:
+
+      HOST: '<your_bitcoind_container_name>'
+      PORT: '<your_bitcoind_container_port>'
+      RPC_USER: '<your_bitcoind_rpc_username>' 
+      RPC_PASSWORD: '<your_bitcoind_rpc_password>'
+      XPUB: '<your_xpub>' 
+
+If you want to use more advanced configuration options available in EPS you can manually change the config.ini in the persistent volume - the sample file is there also. Any non-default (LetsEncrypt or other public) TLS certificates should be placed in the persistent volume as well. To use advanced options start the container without any arguments (it will refuse to start but create the persistent volume) and modify/add the appropriate files - EPS will pick up the changes when restarted. Remember your Electrum wallet will not connect to EPS if you have previously connected to the same DNS name unless you remove the TLS certificate from Electrum's cache. 
+
+3. INITIAL RUN: When first starting the container bitcoind will load the addresses from your xpub (2,000 by default) and exit when finished. This may take up to 30 minutes.
+
+4. WALLET RESCAN: When restarted (automatically if you called the container with that option) bitcoind will rescan the entire blockchain from origin to pick up any existing transactions in your wallet. This can take several hours - monitor the bitcoind container logs for progress.
+
+5. These steps will only happen when initializing the container and should not need to be repeated unless you add/remove/change your wallet. You can force steps 3 or 4 at any time by touching an empty file .firstrun or .rescan in the persistent volume.
 
 A sample docker-compose.yml is included - you should adapt it to your needs.
