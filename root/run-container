@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ -e /srv/.rescan ]; then                                                                                                                     
+
+    rm /srv/.rescan
+
+    electrum-personal-server --rescan --rescan-date 0 /srv/config.ini
+
+fi                                                                                                                                                    
+                                                                                                                                                      
+if [ -e /srv/.firstrun ]; then                                                                                                                     
+
+    sed -i s/DOCKERHOST/$HOST/g /srv/config.ini
+    sed -i s/DOCKERPORT/$PORT/g /srv/config.ini
+    sed -i s/DOCKERRPC_USER/$RPC_USER/g /srv/config.ini
+    sed -i s/DOCKERRPC_PASSWORD/$RPC_PASSWORD/g /srv/config.ini
+    sed -i s/DOCKERXPUB/$XPUB/g /srv/config.ini
+
+    rm /srv/.firstrun
+    touch /srv/.rescan
+fi                                                                                                                                                    
+
+electrum-personal-server /srv/config.ini
