@@ -4,20 +4,21 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 
-RUN apt-get install -y  \
-      curl; \
-    rm -rf /var/lib/apt/lists/*
-
-RUN cd /usr/local/src; \ 
-    curl -sSL -o eps-v0.1.6.tar.gz https://github.com/chris-belcher/electrum-personal-server/archive/eps-v0.1.6.tar.gz; \
-    tar xf eps-v0.1.6.tar.gz; \
-    rm eps-v0.1.6.tar.gz ; \
-    cd electrum-personal-server-eps-v0.1.6; \
+RUN apt-get install -y git; \
+    rm -rf /var/lib/apt/lists/*; \
+    cd /tmp; \ 
+    git clone -b eps-v0.2.0 https://github.com/chris-belcher/electrum-personal-server.git; \
+    cd electrum-personal-server; \
     pip3 install . ; \
-    cp /usr/local/etc/electrum-personal-server/config.cfg_sample /usr/local/etc/electrum-personal-server/config.cfg
+    cp config.ini_sample /srv; \
+    rm -rf /tmp/electrum-personal-server; \
+    apt-get purge -y git; \
+    apt-get -y autoremove
 
-VOLUME /usr/local/etc/electrum-personal-server
+COPY --chown=root:root root/ /
+
+VOLUME /srv
 
 EXPOSE 50002
 
-CMD electrum-personal-server /usr/local/etc/electrum-personal-server/config.cfg
+CMD /run-container
