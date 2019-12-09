@@ -1,9 +1,9 @@
-# docker-compose for docker.io/peleion/eps
+# docker-compose for docker.io/peleion/eps-docker
 
 version: '2'
 services:
   eps:
-    image: docker.io/peleion/eps
+    image: docker.io/peleion/eps-docker
     container_name: eps
     ports:
       - 50002:50002
