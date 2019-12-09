@@ -7,13 +7,19 @@ services:
     container_name: eps
     ports:
       - 50002:50002
+    environment:                                                                                                                                  
+      HOST: '<your_bitcoind_container_name>'
+      PORT: '<your_bitcoind_container_port>'
+      RPC_USER: '<your_bitcoind_rpc_username>' 
+      RPC_PASSWORD: '<your_bitcoind_rpc_password>'
+      XPUB: '<your_xpub>' 
     volumes:
-      - eps:/usr/local/etc/electrum-personal-server
+      - eps:/srv
     restart: unless-stopped
     networks:
-      - <yourcryptonetwork>
+      - '<your_crypto_network_name>'
 volumes:
   eps:
 networks:
-  <yourcryptonetwork>:
+  <your_crypto_network_name>:
     external: true
