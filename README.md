@@ -1,12 +1,8 @@
 # eps-docker 
-A Docker container for Chris Belcher's excellent Electrum Personal Server based on Debian Buster:
-
-https://github.com/chris-belcher/electrum-personal-server
+A Docker container for Chris Belcher's excellent [Electrum Personal Server](https://github.com/chris-belcher/electrum-personal-server) based on Debian Buster. It uses a persistent docker volume which contains the configuration file and sample - this is the /srv directory within the container.
 
 This container is available on dockerhub:
 `docker pull docker.io/peleion/eps-docker`
-
-It uses a persistent docker volume which contains the configuration file and sample - this is the /srv directory within the container.
 
 STEPS TO RUN EPS
 
